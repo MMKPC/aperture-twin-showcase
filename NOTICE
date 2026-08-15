@@ -1,0 +1,57 @@
+Aperture — Hybrid Digital Twin for Utility-Scale Wind Turbines
+Copyright © 2026 Matthew Mitchell · MMKPC Studios
+https://github.com/MMKPC/aperture-twin
+
+================================================================================
+LICENSE SUMMARY (plain language — the full LICENSE file is legally binding)
+================================================================================
+
+You MAY:
+  • Read, study, and learn from this code and paper.
+  • Clone the repository and run the demo locally.
+  • Use it for personal research, coursework, experiments, or hobby projects.
+  • Use it at a nonprofit, university, public research org, government, or
+    public-safety agency — even if that work is funded.
+  • Fork it and build noncommercial derivatives (with attribution).
+  • Cite the white paper in academic work.
+
+You MAY NOT (without a separate commercial license from MMKPC Studios):
+  • Ship any part of this code in a commercial product or paid service.
+  • Use it to provide paid consulting, SaaS, or integrations to clients.
+  • Resell, sublicense, or rebrand the work as your own.
+  • Use "Aperture" or "MMKPC Studios" as product, brand, or company names.
+    (See TRADEMARK.md)
+
+Full legal terms: LICENSE file (PolyForm Noncommercial 1.0.0).
+
+================================================================================
+COMMERCIAL LICENSING
+================================================================================
+
+If you want to use Aperture — in whole or in part — in a commercial product,
+consulting engagement, or paid service, contact:
+
+   Matthew Mitchell
+   MMKPC Studios
+   memitchell@mmkpcstudios.com
+
+Commercial licenses are available and negotiable.
+
+================================================================================
+THIRD-PARTY DATA
+================================================================================
+
+This project references the Kelmarsh Wind Farm SCADA Dataset (Plumley, C. 2022),
+distributed under CC-BY-4.0 from Zenodo (DOI: 10.5281/zenodo.5841834).
+The dataset is NOT included in this repository. Users must download it
+independently from Zenodo and comply with its own license terms.
+
+================================================================================
+ATTRIBUTION
+================================================================================
+
+If you publish research, a thesis, or any public work that meaningfully builds
+on Aperture, please cite:
+
+   Mitchell, M. E. (2026). Aperture — Hybrid Digital Twin for Utility-Scale
+   Wind Turbines. MMKPC Studios. https://github.com/MMKPC/aperture-twin

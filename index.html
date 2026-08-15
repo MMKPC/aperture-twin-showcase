@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!--
+  Aperture — Hybrid Digital Twin for Utility-Scale Wind Turbines
+  Copyright © 2026 Matthew Mitchell · MMKPC Studios
+  Source-available under PolyForm Noncommercial License 1.0.0
+  https://github.com/MMKPC/aperture-twin-showcase
+  Commercial licensing: memitchell@mmkpcstudios.com
+-->
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aperture — Wind Turbine Digital Twin · Matthew Mitchell / MMKPC Studios</title>
+  <meta name="description" content="Real-time wind turbine digital twin: SCADA ingest, physics-based state, ML inference, scenario branching, and a procedural 3D view of the asset." />
+  <meta name="author" content="Matthew Mitchell — MMKPC Studios" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Aperture — Wind Turbine Digital Twin" />
+  <meta property="og:description" content="Real-time hybrid digital twin for utility-scale wind turbines. SCADA → physics → ML → 3D." />
+  <meta property="og:url" content="https://mmkpc.github.io/aperture-twin-showcase/" />
+  <meta property="og:site_name" content="MMKPC Studios" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Aperture — Wind Turbine Digital Twin" />
+  <meta name="twitter:description" content="Real-time hybrid digital twin for utility-scale wind turbines. By Matthew Mitchell / MMKPC Studios." />
+
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/app.css" />
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2301696F'/%3E%3Cpath d='M16 4 V28 M16 16 L26 10 M16 16 L6 10' stroke='%23F7F6F2' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23F7F6F2'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <svg class="logo" width="28" height="28" viewBox="0 0 32 32" aria-label="Aperture Wind Turbine Digital Twin">
+      <rect width="32" height="32" rx="6" fill="var(--color-primary)"/>
+      <path d="M16 4 V28 M16 16 L26 10 M16 16 L6 10" stroke="var(--color-bg)" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      <circle cx="16" cy="16" r="2.2" fill="var(--color-bg)"/>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-name">APERTURE</div>
+      <div class="brand-sub">Wind Turbine Digital Twin · v1.0 · by Matthew Mitchell / MMKPC Studios</div>
+    </div>
+  </div>
+  <nav class="header-actions">
+    <div class="status-pill" id="sys-status">
+      <span class="status-dot"></span>
+      <span id="sys-status-text">Idle</span>
+    </div>
+    <button class="btn btn-ghost" id="btn-toggle-theme" aria-label="Toggle theme">☼</button>
+  </nav>
+</header>
+
+<main class="app-grid">
+
+  <!-- LEFT COLUMN: asset profile + annunciator -->
+  <aside class="col-left">
+    <section class="panel" id="panel-asset">
+      <header class="panel-head">
+        <h2>Asset Profile</h2>
+        <span class="tag" id="twin-id-tag">—</span>
+      </header>
+      <div class="asset-grid">
+        <div class="field-static"><label>Asset ID</label><span id="m-asset-id">—</span></div>
+        <div class="field-static"><label>Manufacturer</label><span id="m-asset-mfr">—</span></div>
+        <div class="field-static"><label>Rated Power</label><span id="m-asset-rated">—</span></div>
+        <div class="field-static"><label>Hub Height</label><span id="m-asset-hub">—</span></div>
+        <div class="field-static"><label>Commissioned</label><span id="m-asset-commissioned">—</span></div>
+        <div class="field-static"><label>Location</label><span id="m-asset-location">—</span></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-annunciator">
+      <header class="panel-head">
+        <h2>Annunciator / Event Log</h2>
+        <span class="tag" id="ann-count">0 active</span>
+      </header>
+      <div class="annunciator" id="annunciator" role="log" aria-live="polite"></div>
+    </section>
+
+    <section class="panel" id="panel-events">
+      <header class="panel-head">
+        <h2>SCADA Stream</h2>
+        <span class="tag" id="event-count">0 samples</span>
+      </header>
+      <div class="event-stream" id="event-stream"></div>
+    </section>
+  </aside>
+
+  <!-- CENTER COLUMN: 3D scene + state grid -->
+  <section class="col-center">
+    <section class="panel panel-scene">
+      <header class="panel-head">
+        <h2>Turbine 3D View</h2>
+        <div class="scene-chips">
+          <span class="chip" id="chip-branch">baseline</span>
+        </div>
+      </header>
+      <div class="scene-container">
+        <canvas id="scene-canvas"></canvas>
+      </div>
+    </section>
+
+    <section class="panel panel-state">
+      <header class="panel-head"><h2>Live State</h2></header>
+      <div class="state-sections">
+
+        <div class="state-section">
+          <div class="sec-title">Environmental</div>
+          <div class="sm-grid">
+            <div class="sm"><div class="sm-lbl">Wind Speed</div><div class="sm-val" id="m-wind-speed">—</div></div>
+            <div class="sm"><div class="sm-lbl">Wind Dir</div><div class="sm-val" id="m-wind-dir">—</div></div>
+            <div class="sm"><div class="sm-lbl">Ambient</div><div class="sm-val" id="m-ambient">—</div></div>
+          </div>
+        </div>
+
+        <div class="state-section">
+          <div class="sec-title">Electrical</div>
+          <div class="sm-grid">
+            <div class="sm"><div class="sm-lbl">Power</div><div class="sm-val" id="m-power">—</div></div>
+            <div class="sm"><div class="sm-lbl">Grid V</div><div class="sm-val" id="m-grid-v">—</div></div>
+            <div class="sm"><div class="sm-lbl">Grid Hz</div><div class="sm-val" id="m-grid-f">—</div></div>
+          </div>
+        </div>
+
+        <div class="state-section">
+          <div class="sec-title">Mechanical</div>
+          <div class="sm-grid">
+            <div class="sm"><div class="sm-lbl">Rotor RPM</div><div class="sm-val" id="m-rotor-rpm">—</div></div>
+            <div class="sm"><div class="sm-lbl">Gen RPM</div><div class="sm-val" id="m-gen-rpm">—</div></div>
+            <div class="sm"><div class="sm-lbl">Gearbox T</div><div class="sm-val" id="m-gearbox-t">—</div></div>
+            <div class="sm"><div class="sm-lbl">Bearing T</div><div class="sm-val" id="m-bearing-t">—</div></div>
+            <div class="sm"><div class="sm-lbl">Vibration</div><div class="sm-val" id="m-vib">—</div></div>
+          </div>
+        </div>
+
+        <div class="state-section">
+          <div class="sec-title">Control</div>
+          <div class="sm-grid">
+            <div class="sm"><div class="sm-lbl">Pitch</div><div class="sm-val" id="m-pitch">—</div></div>
+            <div class="sm"><div class="sm-lbl">Yaw</div><div class="sm-val" id="m-yaw">—</div></div>
+            <div class="sm"><div class="sm-lbl">Nacelle Dir</div><div class="sm-val" id="m-nacelle-d">—</div></div>
+            <div class="sm"><div class="sm-lbl">State</div><div class="sm-val" id="m-op-state">—</div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </section>
+
+  <!-- RIGHT COLUMN: predictions + scenarios + actuator + controls -->
+  <aside class="col-right">
+    <section class="panel" id="panel-predictions">
+      <header class="panel-head">
+        <h2>ML Inference</h2>
+        <span class="tag" id="p-routing">—</span>
+      </header>
+      <div class="pred-block">
+        <div class="pred-row">
+          <div class="pred-k">Predicted Power</div>
+          <div class="pred-v" id="p-power">—</div>
+        </div>
+        <div class="pred-row">
+          <div class="pred-k">Actual Power</div>
+          <div class="pred-v" id="p-power-actual">—</div>
+        </div>
+        <canvas id="spark-power" class="spark" width="320" height="56"></canvas>
+
+        <div class="pred-row">
+          <div class="pred-k">Gearbox 10-min Forecast</div>
+          <div class="pred-v" id="p-gearbox">—</div>
+        </div>
+        <canvas id="spark-gearbox" class="spark" width="320" height="40"></canvas>
+
+        <div class="pred-row">
+          <div class="pred-k">Predicted State</div>
+          <div class="pred-v" id="p-state">—</div>
+        </div>
+        <div class="prob-block" id="p-state-probs"></div>
+
+        <div class="pred-row anomaly-row">
+          <div class="pred-k">
+            Anomaly Score
+            <div class="fault-line">Hypothesis: <span id="p-fault">—</span></div>
+          </div>
+          <canvas id="gauge-anomaly" class="gauge" width="120" height="72"></canvas>
+        </div>
+
+        <div class="pred-explain" id="p-explain">Awaiting first SCADA sample.</div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-scenarios">
+      <header class="panel-head">
+        <h2>Scenario Branches</h2>
+        <button class="btn btn-sm" id="btn-simulate">Run Simulation</button>
+      </header>
+      <div class="branches">
+        <div class="branch" data-branch="baseline">
+          <div class="branch-head">
+            <span class="branch-name">Baseline</span>
+            <span class="branch-score" id="s-baseline">—</span>
+          </div>
+          <canvas class="branch-spark" id="spark-baseline" width="260" height="44"></canvas>
+        </div>
+        <div class="branch" data-branch="optimistic">
+          <div class="branch-head">
+            <span class="branch-name">Optimistic</span>
+            <span class="branch-score" id="s-optimistic">—</span>
+          </div>
+          <canvas class="branch-spark" id="spark-optimistic" width="260" height="44"></canvas>
+        </div>
+        <div class="branch" data-branch="stress">
+          <div class="branch-head">
+            <span class="branch-name">Stress</span>
+            <span class="branch-score" id="s-stress">—</span>
+          </div>
+          <canvas class="branch-spark" id="spark-stress" width="260" height="44"></canvas>
+        </div>
+      </div>
+      <div class="branch-selected" id="branch-selected">Active branch: <strong>baseline</strong></div>
+    </section>
+
+    <section class="panel" id="panel-actuator">
+      <header class="panel-head">
+        <h2>Actuator State</h2>
+      </header>
+      <div class="actuator-grid">
+        <div class="act-row"><div class="act-k">Pitch cmd</div><div class="act-v" id="act-pitch">—</div></div>
+        <div class="act-row"><div class="act-k">Yaw cmd</div><div class="act-v" id="act-yaw">—</div></div>
+        <div class="act-row"><div class="act-k">Alarm</div><div class="act-v" id="act-alarm">—</div></div>
+        <div class="act-row act-wide"><div class="act-k">Latched faults</div><div class="act-v" id="act-faults">—</div></div>
+      </div>
+      <div class="actuator-controls">
+        <div class="ctrl-row">
+          <label>Pitch°</label>
+          <input type="number" id="input-pitch" step="0.5" min="0" max="90" value="0" />
+          <button class="btn btn-sm" id="btn-set-pitch">Set</button>
+        </div>
+        <div class="ctrl-row">
+          <label>Yaw°</label>
+          <input type="number" id="input-yaw" step="1" min="0" max="359" value="180" />
+          <button class="btn btn-sm" id="btn-set-yaw">Set</button>
+        </div>
+        <div class="ctrl-row ctrl-row-btns">
+          <button class="btn btn-sm btn-ghost" id="btn-reset-alarm">Reset Alarm</button>
+          <button class="btn btn-sm btn-alert" id="btn-shutdown">Shutdown</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-controls">
+      <header class="panel-head">
+        <h2>SCADA Stream / Faults</h2>
+      </header>
+      <div class="controls-row">
+        <button class="btn" id="btn-stream">Start Stream</button>
+        <select id="fault-select"></select>
+      </div>
+      <div class="scenario-btns">
+        <button class="btn btn-sm btn-ghost" data-scenario="normal">Normal</button>
+        <button class="btn btn-sm btn-ghost" data-scenario="gearbox_overheat">Gearbox OT</button>
+        <button class="btn btn-sm btn-ghost" data-scenario="pitch_stuck">Pitch Stuck</button>
+        <button class="btn btn-sm btn-ghost" data-scenario="yaw_misalignment">Yaw Mis</button>
+        <button class="btn btn-sm btn-ghost" data-scenario="generator_bearing_fault">Bearing</button>
+        <button class="btn btn-sm btn-ghost" data-scenario="icing">Icing</button>
+        <button class="btn btn-sm btn-ghost" data-scenario="cut_out">Cut-out</button>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-replay">
+      <header class="panel-head">
+        <h2>Replay</h2>
+        <span class="tag" id="replay-tag">—</span>
+      </header>
+      <div class="replay-controls">
+        <button class="btn btn-sm" id="btn-replay-start">Record</button>
+        <button class="btn btn-sm" id="btn-replay-play" disabled>Play</button>
+        <button class="btn btn-sm btn-ghost" id="btn-replay-export">Export JSON</button>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<footer class="app-footer">
+  <span class="footer-left">Pipeline: SCADA → Ingest → State → Features → ML → Scenario → Actuator → 3D</span>
+  <span class="footer-credit-inline">
+    Built by <strong>Matthew Mitchell</strong> · <span class="footer-studio">MMKPC Studios</span> ·
+    <a href="https://github.com/MMKPC/aperture-twin-showcase" target="_blank" rel="noopener">Source</a> ·
+    <a href="https://github.com/MMKPC" target="_blank" rel="noopener">More work</a>
+  </span>
+  <span class="footer-right" id="latency-readout">0.0 ms / tick · ready</span>
+</footer>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.160.0",
+    "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>
