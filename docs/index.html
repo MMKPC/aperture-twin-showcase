@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aperture | Wind Turbine Digital Twin</title>
+  <meta name="description" content="A browser-native hybrid digital twin for wind turbine condition monitoring, scenario simulation, and operator decision support.">
+  <meta property="og:title" content="Aperture | Wind Turbine Digital Twin">
+  <meta property="og:description" content="A technical portfolio case study by MMKPC Studios.">
+  <meta property="og:image" content="https://mmkpc.github.io/aperture-twin-showcase/assets/screenshot-hero.png">
+  <meta property="og:url" content="https://mmkpc.github.io/aperture-twin-showcase/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./">MMKPC <span>STUDIOS</span></a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="#system">System</a>
+      <a href="#evidence">Evidence</a>
+      <a href="demo/">Open demo</a>
+      <a class="nav-source" href="https://github.com/MMKPC/aperture-twin-showcase" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section-shell">
+      <div class="hero-copy">
+        <p class="eyebrow">Technical portfolio / digital twin systems</p>
+        <h1>Aperture</h1>
+        <p class="hero-lede">A browser-native hybrid digital twin for utility-scale wind turbines.</p>
+        <p class="hero-body">Aperture turns SCADA-style telemetry into a live turbine state, interpretable model outputs, fault scenarios, and operator decisions in one static web experience.</p>
+        <div class="actions">
+          <a class="button button-primary" href="demo/">Open interactive demo <span aria-hidden="true">-&gt;</span></a>
+          <a class="button button-secondary" href="Aperture_White_Paper.md">Read the technical paper</a>
+        </div>
+        <p class="quiet-note">Built by Matthew Mitchell / MMKPC Studios</p>
+      </div>
+      <figure class="hero-visual">
+        <img src="assets/screenshot-hero.png" alt="Aperture dashboard showing a turbine 3D view, asset telemetry, ML inference, and scenario controls">
+        <figcaption>Live operator surface: asset state, turbine view, inference, alarms, and scenario controls.</figcaption>
+      </figure>
+    </section>
+
+    <section class="signal-strip section-shell" aria-label="Aperture highlights">
+      <div><strong>4</strong><span>browser ML models</span></div>
+      <div><strong>7</strong><span>reproducible fault modes</span></div>
+      <div><strong>0.869 ms</strong><span>median inference latency</span></div>
+      <div><strong>9</strong><span>runtime layers</span></div>
+    </section>
+
+    <section class="story section-shell" id="system">
+      <div class="section-intro">
+        <p class="eyebrow">The project</p>
+        <h2>From telemetry to a decision surface.</h2>
+      </div>
+      <div class="story-grid">
+        <div>
+          <p class="lead">The challenge was to make a digital-twin workflow that could be inspected, demonstrated, and deployed without a backend or a specialist runtime.</p>
+          <p>Aperture combines a typed SCADA replay, physics-light state propagation, interpretable JavaScript models, scenario branching, and operator controls. The result is not presented as a billing-grade wind-farm platform. It is a transparent reference system that makes the full reasoning path visible.</p>
+        </div>
+        <div class="quote-block">
+          <span class="quote-mark">/</span>
+          <p>Every signal has somewhere to go. Every alert has a reason. Every intervention can be traced back through the loop.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pipeline-section section-shell">
+      <div class="section-intro compact">
+        <p class="eyebrow">Runtime architecture</p>
+        <h2>The operating loop</h2>
+        <p>One event path connects data, models, simulation, controls, and the 3D operator view.</p>
+      </div>
+      <div class="pipeline" role="list" aria-label="Aperture runtime pipeline">
+        <div class="pipeline-step" role="listitem"><span>01</span><strong>SCADA</strong><small>telemetry replay</small></div>
+        <div class="pipeline-step" role="listitem"><span>02</span><strong>Ingest</strong><small>typed state</small></div>
+        <div class="pipeline-step" role="listitem"><span>03</span><strong>Features</strong><small>derived signals</small></div>
+        <div class="pipeline-step" role="listitem"><span>04</span><strong>ML</strong><small>four models</small></div>
+        <div class="pipeline-step" role="listitem"><span>05</span><strong>Scenario</strong><small>fault branches</small></div>
+        <div class="pipeline-step" role="listitem"><span>06</span><strong>Actuator</strong><small>operator response</small></div>
+        <div class="pipeline-step" role="listitem"><span>07</span><strong>3D view</strong><small>visual state</small></div>
+      </div>
+    </section>
+
+    <section class="capabilities section-shell">
+      <div class="section-intro compact">
+        <p class="eyebrow">What is inside</p>
+        <h2>Built as a system, not a screenshot.</h2>
+      </div>
+      <div class="capability-grid">
+        <article class="capability"><span class="capability-index">01</span><h3>State model</h3><p>Wind, power, rotor, generator, gearbox, bearing, pitch, yaw, and operational state share one readable runtime model.</p></article>
+        <article class="capability"><span class="capability-index">02</span><h3>Interpretable ML</h3><p>Power-curve regression, gearbox forecasting, state classification, and anomaly scoring run as inspectable browser modules.</p></article>
+        <article class="capability"><span class="capability-index">03</span><h3>Fault scenarios</h3><p>Gearbox overheat, pitch stuck, yaw misalignment, bearing fault, icing, cut-out, and normal operation can be replayed.</p></article>
+        <article class="capability"><span class="capability-index">04</span><h3>Operator loop</h3><p>Annunciation, alarm acknowledgement, pitch, yaw, shutdown, reset, recording, replay, and export connect the twin to action.</p></article>
+      </div>
+    </section>
+
+    <section class="evidence section-shell" id="evidence">
+      <div class="evidence-copy">
+        <p class="eyebrow">Evidence</p>
+        <h2>Measured, documented, and honest about the boundary.</h2>
+        <p>The public surface includes the selected metrics, signal mapping, technical paper, evaluation notes, and figures. The raw dataset and full evaluation runner remain private development materials.</p>
+        <div class="link-row">
+          <a href="evaluation.md">Evaluation notes <span aria-hidden="true">-&gt;</span></a>
+          <a href="metrics.json">Published metrics <span aria-hidden="true">-&gt;</span></a>
+          <a href="figures/fig_power_curve.png">Figures <span aria-hidden="true">-&gt;</span></a>
+        </div>
+      </div>
+      <div class="metric-list">
+        <div><span>Power-curve R2</span><strong>0.9758</strong></div>
+        <div><span>Anomaly AUROC</span><strong>0.8601</strong></div>
+        <div><span>Classifier accuracy</span><strong>0.9243</strong></div>
+        <div><span>Gearbox forecast RMSE</span><strong>3.36 C</strong></div>
+      </div>
+    </section>
+
+    <section class="closing section-shell">
+      <div>
+        <p class="eyebrow">Public portfolio surface</p>
+        <h2>Explore the system, then inspect the reasoning.</h2>
+      </div>
+      <div class="closing-actions">
+        <a class="button button-primary" href="demo/">Run Aperture</a>
+        <a class="button button-secondary" href="https://github.com/MMKPC/aperture-twin-showcase" target="_blank" rel="noopener">View showcase repo</a>
+      </div>
+      <p class="boundary-note">This public mirror is intentionally curated. The original development repository remains private; the interactive showcase and published technical artifacts are available here for review and download.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer section-shell">
+    <span>MMKPC Studios / Aperture</span>
+    <span>Wind turbine digital twin / 2026</span>
+  </footer>
+</body>
+</html>

@@ -4,6 +4,8 @@ Public portfolio presentation of Aperture, a browser-native hybrid digital twin 
 
 This public mirror contains the static interactive demo, visual evidence, technical notes, evaluation figures, and licensing documents. The original development repository remains private; this showcase is the approved presentation surface.
 
+Start with the [portfolio breakdown](https://mmkpc.github.io/aperture-twin-showcase/), then [open the interactive demo](https://mmkpc.github.io/aperture-twin-showcase/demo/). The public mirror is intentionally downloadable; private development history and machine-specific materials remain outside it.
+
 ## What it demonstrates
 
 - SCADA-style telemetry ingestion and typed state.
