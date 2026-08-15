@@ -2,3 +2,12 @@
 Thumbs.db
 *.log
 .playwright-cli/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
