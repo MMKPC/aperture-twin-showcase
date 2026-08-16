@@ -1,8 +1,8 @@
 # Aperture: Wind Turbine Digital Twin
 
-Private portfolio presentation of Aperture, a browser-native hybrid digital twin for utility-scale wind turbines.
+Public portfolio presentation of Aperture, a browser-native hybrid digital twin for utility-scale wind turbines.
 
-This private showcase mirror contains the static interactive demo, visual evidence, technical notes, evaluation figures, and licensing documents. The original development repository remains private; this repository is the controlled studio presentation surface.
+This controlled showcase contains the static interactive demo, visual evidence, technical notes, evaluation figures, and licensing documents. The original development repository remains private; this repository is the public studio presentation surface.
 
 Start with the [portfolio breakdown](https://mmkpc.github.io/aperture-twin-showcase/), then [open the interactive demo](https://mmkpc.github.io/aperture-twin-showcase/demo/). The showcase remains available to authorized studio and portfolio workflows; private development history and machine-specific materials remain outside it.
 
@@ -20,4 +20,4 @@ No credentials, private infrastructure, or external service secrets are included
 
 ## Studio control
 
-This repository is now a private MMKPC Studios showcase artifact for later integration into MMKProspects.com. Current access policy is in `MMKPC_STUDIO_LICENSE.md`, the existing `LICENSE` remains applicable to previously released code, credential handling is in `SECURITY.md`, and the release gate is `scripts/validate_studio_manifest.ps1`.
+This repository is the interactive demonstration layer referenced by MMKProspects.com. Current access policy is in `MMKPC_STUDIO_LICENSE.md`, the existing `LICENSE` remains applicable to previously released code, credential handling is in `SECURITY.md`, and the release gate is `scripts/validate_studio_manifest.ps1`.

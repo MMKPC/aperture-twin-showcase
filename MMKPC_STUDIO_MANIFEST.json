@@ -4,11 +4,11 @@
   "portfolio_destination": "MMKProspects.com",
   "project_id": "aperture-twin",
   "repository": "MMKPC/aperture-twin-showcase",
-  "repository_class": "private-showcase",
-  "visibility": "private",
-  "public_release": false,
+  "repository_class": "public-showcase",
+  "visibility": "public-showcase",
+  "public_release": true,
   "access_policy": "MMKPC Studios repository policy; published code retains its existing PolyForm Noncommercial 1.0.0 notice.",
   "third_party_materials": "Remain governed by their original licenses.",
   "credentials": {"included": false, "policy": "No credentials, API keys, tokens, private keys, or machine-specific secrets may be committed.", "runtime_config": "Use environment variables or a local secret store."},
-  "verification": {"validator": "scripts/validate_studio_manifest.ps1", "required_checks": ["manifest-schema", "credential-pattern-scan", "private-repository-visibility"]}
+  "verification": {"validator": "scripts/validate_studio_manifest.ps1", "required_checks": ["manifest-schema", "credential-pattern-scan", "public-showcase-boundary"]}
 }
